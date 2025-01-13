@@ -1,0 +1,67 @@
+<div class="d-flex justify-content-center align-items-center vh-100">
+  <div class="card p-4" style="width: 20rem">
+    <h3 class="text-center mb-4">Login</h3>
+    <app-alert-validate *ngIf="validateMessage" [message]="menssage" [error]="true" ></app-alert-validate>
+    <form [formGroup]="formLogin" (ngSubmit)="sendLogin()" novalidate>
+      <div class="mb-3">
+        <label for="usuario" class="form-label">Usuario</label>
+        <input
+          type="text"
+          class="form-control"
+          [ngClass]="{
+            'is-invalid custom-danger-border ':
+            formLogin.get('usuario')?.invalid &&
+            formLogin.get('usuario')?.touched
+          }"
+          id="usuario"
+          formControlName="usuario"
+          autocomplete="off"
+          required
+        />
+        <div
+          *ngIf="
+            formLogin.get('usuario')?.invalid &&
+            formLogin.get('usuario')?.touched
+          "
+          class="invalid-feedback"
+        >
+          <div *ngIf="formLogin.get('usuario')?.errors">
+            Usuario requerido
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="contrasena" class="form-label">Contraseña</label>
+        <input
+          type="password"
+          class="form-control"
+          [ngClass]="{
+            'is-invalid custom-danger-border ':
+            formLogin.get('contrasena')?.invalid &&
+            formLogin.get('contrasena')?.touched
+          }"
+          id="contrasena"
+          formControlName="contrasena"
+          required
+        />
+        <div
+          *ngIf="
+            formLogin.get('contrasena')?.invalid &&
+            formLogin.get('contrasena')?.touched
+          "
+          class="invalid-feedback"
+        >
+          <div *ngIf="formLogin.get('contrasena')?.errors">
+            Contraseña requerida
+          </div>
+        </div>
+      </div>
+      <button *ngIf="isLogin" class="btn btn-primary w-100" [disabled]="isLogin">
+        <i class="fa fa-spin fa-sync"></i> Iniciando...
+      </button>
+      <button type="submit" class="btn btn-primary w-100" *ngIf="!isLogin">
+        Iniciar Sesión
+      </button>
+    </form>
+  </div>
+</div>
