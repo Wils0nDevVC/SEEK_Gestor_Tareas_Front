@@ -8,6 +8,9 @@ import { ProductService } from 'src/app/shared/services/product.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogResponseComponent } from 'src/app/component/dialog-response/dialog-response.component';
+import { MessageControlService } from 'src/app/shared/services/message-control.service';
 
 @Component({
   selector: 'app-listar-tareas',
@@ -37,7 +40,9 @@ export class ListarTareasComponent implements OnInit {
   ];
   dataSource!: MatTableDataSource<Product>;
   constructor(
-    private productService: ProductService // Inyectamos el ProductService
+    private dialog: MatDialog,
+    private productService: ProductService,
+    private messageControlService : MessageControlService
   ) {}
 
   ngOnInit(): void {
@@ -69,11 +74,28 @@ export class ListarTareasComponent implements OnInit {
   }
 
   onDeleted(product: Product): void {
-    this.productService.deleteTodo(product).subscribe({
-      next : (response)=>{
-        console.log(response)
+    
+    const dialogRef = this.dialog.open(DialogResponseComponent, {
+      disableClose: true,
+      data : {...product, message:'Desea eliminar el Producto'},
+      width: '250px',
+    });
+
+    dialogRef.afterClosed().subscribe(r => {
+      if (r) {
+
+        this.productService.deleteProduct(product).subscribe({
+          next : (response)=>{
+          },
+          complete: ()=>{
+            this.getProducts()
+            this.messageControlService.ShowSuccess('Se elimino Correctamente')
+          },
+          error: ()=> this.messageControlService.ShowError('Ocurrio un error')
+        })
       }
-    })
+    });
+
   }
   onSendNotifications(){
 

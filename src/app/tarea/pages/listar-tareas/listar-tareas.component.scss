@@ -1,0 +1,28 @@
+.button_action_flex{
+    max-width: 100%;
+    justify-content: flex-end;
+    display: flex;
+  }
+  
+  .mat-elevation-z8 {    
+    overflow-x: auto;
+   }
+ 
+  table{
+    width: 100%;
+  }
+  
+
+  .mat-mdc-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+
+
+  .active-date {
+    background-color: green;
+  }
+
+  .in-active-date {
+    background-color: red;
+  }

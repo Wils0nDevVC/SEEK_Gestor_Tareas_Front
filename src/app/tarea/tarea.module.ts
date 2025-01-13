@@ -7,6 +7,7 @@ import { ListarTareasComponent } from './pages/listar-tareas/listar-tareas.compo
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ComponentModule } from '../component/component.module';
 import { MaterialModule } from '../material/material.module';
+import { MessageControlService } from '../shared/services/message-control.service';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { MaterialModule } from '../material/material.module';
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    ComponentModule
-  ]
+    ComponentModule,
+  ],
+  providers:[MessageControlService]
 })
 export class TareaModule { }

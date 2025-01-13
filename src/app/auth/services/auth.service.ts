@@ -7,12 +7,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { LocalService } from '../../shared/services/local-service.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environments.prod';
+import { EndPointBase, EndPointsAuth } from 'src/app/shared/constant';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = `${environment.apiBaseUrl}/api/Auth/Login`; // URL del endpoint de autenticación en .NET
+  private apiUrl = `${environment.apiBaseUrl}`; // URL del endpoint de autenticación en .NET
 
   constructor(
     private store: Store<AppState>,
@@ -30,7 +31,7 @@ export class AuthService {
       'Content-Type': 'application/json',
     });
 
-    return this.http.post<any>(this.apiUrl, body, { headers }).pipe(
+    return this.http.post<any>(`${this.apiUrl + EndPointBase.Auth + EndPointsAuth.Login}`, body, { headers }).pipe(
       map((response) => {
         if (response.IsSuccess) {
           const user: Usuario = {
