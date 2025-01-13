@@ -68,8 +68,12 @@ export class ListarTareasComponent implements OnInit {
     // Aquí iría la lógica para actualizar el producto
   }
 
-  onDeleted(product: any): void {
-    // Aquí iría la lógica para eliminar el producto
+  onDeleted(product: Product): void {
+    this.productService.deleteTodo(product).subscribe({
+      next : (response)=>{
+        console.log(response)
+      }
+    })
   }
   onSendNotifications(){
 
