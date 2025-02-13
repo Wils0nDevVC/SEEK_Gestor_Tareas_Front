@@ -8,13 +8,13 @@ import { LocalService } from '../../shared/services/local-service.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environments.prod';
 import { EndPointBase, EndPointsAuth } from 'src/app/shared/constant';
-import { AuthResponse } from '../interfaces/auth-response.interface';
 import { ResponseCustom } from 'src/app/shared/interfaces/response-custom.interface';
+import { AuthResponse } from 'src/app/auth/interfaces/auth-response.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class TareaService {
   private apiUrl = `${environment.apiBaseUrl}`; // URL del endpoint de autenticación en .NET
 
   constructor(

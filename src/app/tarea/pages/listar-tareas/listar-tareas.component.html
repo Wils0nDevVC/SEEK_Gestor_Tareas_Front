@@ -1,5 +1,13 @@
-<h1>Listado de Productos</h1>
+<h1>Listado de Tareas</h1>
+<br>
 <mat-divider></mat-divider>
+<br>
+<!-- Botón flotante para agregar tareas -->
+<div class="  justify-content-end ">
+  <button mat-mini-fab class="bg-primary "  color="primary" (click)="openDialog()" matTooltip="Agregar Tarea">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
 
 <div class="grid bm-12">
   <div class="col-12 p-3">
@@ -24,7 +32,7 @@
               <button
                 mat-icon-button
                 color="primary"
-                (click)="onUpdate(row.Id)"
+                (click)="onUpdate(row)"
                 matTooltip="Editar"
               >
                 <mat-icon>edit</mat-icon>
@@ -35,50 +43,42 @@
           <!-- Age Definition -->
           <ng-container matColumnDef="id">
             <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
-            <mat-cell *matCellDef="let row"> {{ row.Id }} </mat-cell>
+            <mat-cell *matCellDef="let row"> {{ row.id }} </mat-cell>
           </ng-container>
 
           <!-- Title Definition -->
-          <ng-container matColumnDef="nombre">
+          <ng-container matColumnDef="titulo">
             <mat-header-cell *matHeaderCellDef> Titulo </mat-header-cell>
-            <mat-cell *matCellDef="let row"> {{ row.Nombre }} </mat-cell>
+            <mat-cell *matCellDef="let row"> {{ row.titulo }} </mat-cell>
           </ng-container>
-          <ng-container matColumnDef="description">
-            <mat-header-cell *matHeaderCellDef> Descripción </mat-header-cell>
-            <mat-cell *matCellDef="let row"> {{ row.Description }} </mat-cell>
+          <ng-container matColumnDef="descripcion">
+            <mat-header-cell *matHeaderCellDef> Descripción  </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{ row.descripcion }} </mat-cell>
           </ng-container>
-          <ng-container matColumnDef="precio">
-            <mat-header-cell *matHeaderCellDef> Precio </mat-header-cell>
-            <mat-cell *matCellDef="let row"> {{ row.Precio }} </mat-cell>
+          <ng-container matColumnDef="estado">
+            <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{ row.estado }} </mat-cell>
           </ng-container>
-          <ng-container matColumnDef="cantidadInventario">
-            <mat-header-cell *matHeaderCellDef>
-              Cantidad de inventario
-            </mat-header-cell>
-            <mat-cell *matCellDef="let row">
-              {{ row.CantidadInventario }}
-            </mat-cell>
-          </ng-container>
-
+         
           <!-- Header and Row Declarations -->
           <mat-header-row
             *matHeaderRowDef="[
-              'action',
-              'nombre',
-              'description',
-              'precio',
-              'cantidadInventario'
+               'action',
+                'id',
+                'titulo',
+                'descripcion',
+                'estado',
             ]"
           ></mat-header-row>
           <mat-row
             *matRowDef="
               let row;
               columns: [
-                'action',
-                'nombre',
-                'description',
-                'precio',
-                'cantidadInventario'
+              'action',
+              'id',
+              'titulo',
+              'descripcion',
+              'estado',
               ]
             "
           ></mat-row>

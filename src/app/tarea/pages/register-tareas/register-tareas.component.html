@@ -1,42 +1,30 @@
-<div class="container mt-5">
-  <h1 class="text-center mb-4">Lista de Productos</h1>
-  <hr />
-  <h3 class="text-left mb-4">{{ 'Bienvenido ' + usuario.usuario }}</h3>
-  <form [formGroup]="formTarea" (ngSubmit)="sendTarea()" novalidate>
-    <div class="input-group mb-3">
-      <input
-        id="description"
-        type="text"
-        formControlName="description"
-        class="form-control"
-        [ngClass]="{
-          'is-invalid custom-danger-border ':
-            formTarea.get('description')?.invalid &&
-            formTarea.get('description')?.touched
-        }"
-        placeholder="Agregar una nueva tarea"
-        required
-      />
-     
-      <button class="btn btn-primary" type="submit" [disabled]="formTarea.invalid">Agregar</button>
-      <div
-      *ngIf="
-        formTarea.get('description')?.invalid &&
-        formTarea.get('description')?.touched
-      "
-      class="invalid-feedback"
-    >
-      <div *ngIf="formTarea.get('description')?.hasError('required')">
-        La tarea es requerida
-      </div>
-      
-      <div *ngIf="formTarea.get('description')?.hasError('pattern')">
-        Escriba solo letras y números
-      </div>
-    </div>
-    </div>
-  </form>
-  <app-alert-validate *ngIf="validateMessage" [message]="menssage" [error]="isTarea"></app-alert-validate>
+<h2 mat-dialog-title>Registrar Nueva Tarea</h2>
+<mat-dialog-content>
+  <form [formGroup]="tareaForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Título</mat-label>
+      <input matInput formControlName="titulo" />
+    </mat-form-field>
 
-  <app-listar-tareas></app-listar-tareas>
-</div>
+    <mat-form-field appearance="outline">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput formControlName="descripcion"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Estado</mat-label>
+      <mat-select formControlName="estado">
+        <mat-option value="POR_HACER">Por Hacer</mat-option>
+        <mat-option value="EN_PROGRESO">En Progreso</mat-option>
+        <mat-option value="COMPLETADA">Completado</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-button color="primary" (click)="onSubmit()" [disabled]="tareaForm.invalid">
+   {{ updateValue ? 'Actualizar' : 'Guardare'}} 
+  </button>
+</mat-dialog-actions>

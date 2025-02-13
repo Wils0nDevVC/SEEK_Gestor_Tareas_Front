@@ -1,17 +1,17 @@
 
 
 export const EndPointBase =  { 
-    Product : 'product/',
-    Auth: 'Auth/'
+    Tareas : 'tareas',
+    Auth: 'auth/'
 
 }
 export const EndPointsAuth =  { 
-    Login : 'Login',
+    Login : 'login',
 
 }
 
 export const EndPointsProduct =  { 
-    FindAll : 'FindAll',
+    FindAll : '',
     Update: 'Update',
     Delete: 'Delete'
 }

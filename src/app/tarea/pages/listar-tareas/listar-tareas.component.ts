@@ -1,5 +1,5 @@
-import { cargarProductos } from './../../../core/ngrx/products/product.actions';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { LocalService } from './../../../shared/services/local-service.service';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -7,13 +7,16 @@ import {
   Product,
   ProductResponse,
 } from 'src/app/core/interfaces/product.interface';
-import { ProductService } from 'src/app/shared/services/product.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogResponseComponent } from 'src/app/component/dialog-response/dialog-response.component';
 import { MessageControlService } from 'src/app/shared/services/message-control.service';
+import { TodosService } from 'src/app/shared/services/product.service';
+import { ResponseCustom } from 'src/app/shared/interfaces/response-custom.interface';
+import { Todo } from 'src/app/core/interfaces/todo.interface';
+import { RegisterTareasComponent } from '../register-tareas/register-tareas.component';
 
 @Component({
   selector: 'app-listar-tareas',
@@ -24,69 +27,110 @@ export class ListarTareasComponent implements OnInit {
   faTrash = faTrash;
   txtDescription!: FormControl;
 
-  productos: Product[] = [];
+  todos: Todo[] = [];
   loading: boolean = false;
   error: string | null = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatTable) table!: MatTable<Product>;
+  @ViewChild(MatTable) table!: MatTable<Todo>;
 
   isActive: boolean = false;
 
   displayedColumns: string[] = [
-    'Nombre',
-    'Descripción',
-    'Precio',
-    'Cantidad de Inventario',
+    'action',
+    'id',
+    'titulo',
+    'descripcion',
+    'estado',
   ];
-  dataSource!: MatTableDataSource<Product>;
+  dataSource!: MatTableDataSource<Todo>;
   constructor(
+    private cdr: ChangeDetectorRef,
     private dialog: MatDialog,
-    private productService: ProductService,
-    private messageControlService: MessageControlService
+    private Todoservice: TodosService,
+    private messageService: MessageControlService,
+
   ) {}
 
   ngOnInit(): void {
-    this.getProducts();
+    this.getTodos();
   }
 
-  getProducts = () => {
-    this.productService.getProducts().subscribe({
-      next: (response: any) => {
-        this.productos = response?.Data;
-        this.dataSource = new MatTableDataSource(this.productos);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+  getTodos = () => {
+    this.Todoservice.getTodos().subscribe({
+      next: (response: ResponseCustom<Todo[]>) => {
+        if (this.dataSource) {
+          this.dataSource.data = response.value; 
+        } else {
+          this.dataSource = new MatTableDataSource(response.value);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        }
+  
       },
-      complete: () => {},
-      error: () => console.error('Ocurrio un error'),
+      error: () => console.error('Ocurrió un error'),
     });
   };
+  
 
-  onUpdate(product: any): void {
-    // Aquí iría la lógica para actualizar el producto
+  
+
+  onUpdate(todo: Todo): void {
+
+    const dialogRef = this.dialog.open(RegisterTareasComponent, {
+      width: '400px',
+      data : {todo, update : true}
+    });
+  
+    dialogRef.afterClosed().subscribe(async (result) => {
+      if (result) {
+            await this.getTodos();
+            const randomElementIndex = Math.floor(Math.random() * this.todos.length);
+            this.dataSource.data.push(this.todos[randomElementIndex]);
+            this.table.renderRows();
+        }
+      })
   }
 
-  onDeleted(product: Product): void {
+  onDeleted(todo: Todo): void {
     const dialogRef = this.dialog.open(DialogResponseComponent, {
       disableClose: true,
-      data: { ...product, message: 'Desea eliminar el Producto' },
+      data: { ...todo, message: 'Desea eliminar la tarea ' },
       width: '250px',
     });
 
     dialogRef.afterClosed().subscribe((r) => {
       if (r) {
-        this.productService.deleteProduct(product).subscribe({
+        this.Todoservice.deleteProduct(todo.id.toString()).subscribe({
           next: (response) => {},
           complete: () => {
-            this.getProducts();
-            this.messageControlService.ShowSuccess('Se elimino Correctamente');
+            this.getTodos();
+            this.messageService.ShowSuccess('Se elimino Correctamente');
           },
-          error: () => this.messageControlService.ShowError('Ocurrio un error'),
+          error: () => this.messageService.ShowError('Ocurrio un error'),
         });
       }
     });
   }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(RegisterTareasComponent, {
+      width: '400px',
+      data : { update : false}
+    });
+  
+    dialogRef.afterClosed().subscribe(async (result) => {
+      if (result) {
+            await this.getTodos();
+            const randomElementIndex = Math.floor(Math.random() * this.todos.length);
+            this.dataSource.data.push(this.todos[randomElementIndex]);
+            this.table.renderRows();
+        }
+      })
+    };
+  
+
+  
   onSendNotifications() {}
 }
